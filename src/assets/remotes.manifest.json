@@ -1,0 +1,6 @@
+{
+  "agentUi": {
+    "entry": "http://localhost:4205/agentUiEntry.js",
+    "type": "script"
+  }
+}
