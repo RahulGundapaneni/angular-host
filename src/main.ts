@@ -6,6 +6,7 @@ import {
   AGENT_UI_REMOTE_CONFIG,
   AgentUiRemoteConfig,
 } from './app/config/agent-ui-remote.token';
+import { environment } from './environments/environment';
 
 interface RemoteManifestEntry {
   entry: string;
@@ -16,8 +17,8 @@ type RemoteManifest = Record<string, RemoteManifestEntry>;
 
 const FALLBACK_MANIFEST: RemoteManifest = {
   agentUi: {
-    entry: 'http://localhost:4205/agentUiEntry.js',
-    type: 'script',
+    entry: environment.agentUiFallbackEntry,
+    type: environment.agentUiFallbackType,
   },
 };
 
