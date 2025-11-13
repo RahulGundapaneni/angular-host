@@ -3,7 +3,9 @@ import { loadRemoteModule } from '@angular-architects/module-federation-runtime'
 
 import {
   AGENT_UI_REMOTE_CONFIG,
+  AGENT_UI_REMOTE_LOADER,
   AgentUiRemoteConfig,
+  AgentUiRemoteLoader,
 } from '../config/agent-ui-remote.token';
 
 type AgentUiModule = typeof import('agentUi/AgentApp');
@@ -15,6 +17,8 @@ type AgentUiProps = import('agentUi/AgentApp').AgentUiProps;
 @Injectable({ providedIn: 'root' })
 export class AgentUiHostService {
   private readonly config: AgentUiRemoteConfig = inject(AGENT_UI_REMOTE_CONFIG);
+  private readonly loader: AgentUiRemoteLoader =
+    inject(AGENT_UI_REMOTE_LOADER, { optional: true }) ?? loadRemoteModule;
 
   private modulePromise: Promise<AgentUiModule> | null = null;
 
@@ -40,7 +44,7 @@ export class AgentUiHostService {
 
   private ensureModule(): Promise<AgentUiModule> {
     if (!this.modulePromise) {
-      this.modulePromise = loadRemoteModule<AgentUiModule>({
+      this.modulePromise = this.loader<AgentUiModule>({
         type: this.config.type,
         remoteEntry: this.config.remoteEntry,
         remoteName: this.config.remoteName,
