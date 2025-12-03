@@ -45,8 +45,8 @@ export class HostComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  async ngOnDestroy(): Promise<void> {
-    await this.remoteHost.unmount();
+  ngOnDestroy(): void {
+    void this.remoteHost.unmount();
   }
 
   private async handleCustomer(customerId: string | undefined): Promise<void> {
