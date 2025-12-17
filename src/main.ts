@@ -22,9 +22,16 @@ const FALLBACK_MANIFEST: RemoteManifest = {
   },
 };
 
+function buildAssetUrl(path: string): string {
+  const baseHref = document.baseURI ?? window.location.origin;
+  return new URL(path, baseHref).toString();
+}
+
 async function loadRemoteManifest(): Promise<RemoteManifest> {
+  const manifestUrl = buildAssetUrl('assets/remotes.manifest.json');
+
   try {
-    const response = await fetch('/assets/remotes.manifest.json', { cache: 'no-store' });
+    const response = await fetch(manifestUrl, { cache: 'no-store' });
 
     if (!response.ok) {
       throw new Error(`Manifest request failed with status ${response.status}`);
@@ -32,7 +39,10 @@ async function loadRemoteManifest(): Promise<RemoteManifest> {
 
     return (await response.json()) as RemoteManifest;
   } catch (error) {
-    console.warn('Falling back to default Module Federation manifest.', error);
+    console.warn(
+      `Falling back to default Module Federation manifest because ${manifestUrl} could not be loaded.`,
+      error,
+    );
     return FALLBACK_MANIFEST;
   }
 }
