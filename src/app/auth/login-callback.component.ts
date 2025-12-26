@@ -3,9 +3,12 @@ import { Router } from '@angular/router';
 import { OKTA_AUTH } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
 
+import { authContext } from './logging.util';
+
 @Component({
   selector: 'app-login-callback',
-  template: 'Signing you in...',
+  templateUrl: './login-callback.component.html',
+  styleUrls: ['./login-callback.component.scss'],
 })
 export class LoginCallbackComponent implements OnInit {
   constructor(
@@ -16,6 +19,11 @@ export class LoginCallbackComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     try {
       const { tokens, state } = await this.oktaAuth.token.parseFromUrl();
+      console.info('[auth] token parse success', {
+        ...authContext(),
+        idToken: tokens.idToken ? 'present' : 'missing',
+        accessToken: tokens.accessToken ? 'present' : 'missing',
+      });
       await this.oktaAuth.tokenManager.setTokens(tokens);
 
       const customerId = this.parseCustomerId(state);
@@ -25,6 +33,7 @@ export class LoginCallbackComponent implements OnInit {
         replaceUrl: true,
       });
     } catch (error) {
+      console.error('[auth] token parse failed', { ...authContext(), error });
       await this.router.navigate(['/logout'], { replaceUrl: true });
     }
   }
@@ -35,9 +44,17 @@ export class LoginCallbackComponent implements OnInit {
     }
 
     try {
-      const parsed = JSON.parse(state) as { customerId?: string };
-      return parsed.customerId || undefined;
-    } catch {
+      const parsed = JSON.parse(state);
+      const customerId =
+        parsed && typeof parsed === 'object' && 'customerId' in parsed
+          ? (parsed as { customerId?: unknown }).customerId
+          : undefined;
+
+      return typeof customerId === 'string' && customerId.trim()
+        ? customerId.trim()
+        : undefined;
+    } catch (error) {
+      console.warn('Ignoring malformed Okta state payload', error);
       return undefined;
     }
   }
