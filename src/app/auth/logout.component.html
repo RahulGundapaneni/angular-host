@@ -1,15 +1,5 @@
-<div class="auth-status">
-  <div class="spinner" aria-hidden="true"></div>
-  <div class="message">
-    <div class="title">
-      {{ signedOut ? 'You are signed out' : 'Signing you out' }}
-    </div>
-    <div class="subtitle">
-      {{
-        signedOut
-          ? 'It is safe to close this tab.'
-          : 'Ending your Okta session…'
-      }}
-    </div>
-  </div>
+<div class="logout-error">
+  <div class="code">Logout</div>
+  <div class="message">This page cannot be accessed directly.</div>
+  <a routerLink="/" class="link">Go back home</a>
 </div>

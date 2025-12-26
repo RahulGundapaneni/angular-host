@@ -1,32 +1,26 @@
-.auth-status {
+.logout-error {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 20px;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px;
   font-family: Arial, sans-serif;
   color: #1f2937;
 }
 
-.spinner {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 3px solid #d1d5db;
-  border-top-color: #2563eb;
-  animation: spin 0.8s linear infinite;
+.code {
+  font-size: 1.4rem;
+  font-weight: 700;
 }
 
-.title {
-  font-weight: 600;
+.message {
+  color: #4b5563;
 }
 
-.subtitle {
-  font-size: 0.9rem;
-  color: #6b7280;
+.link {
+  color: #2563eb;
+  text-decoration: none;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.link:hover {
+  text-decoration: underline;
 }
