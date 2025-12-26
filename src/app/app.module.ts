@@ -8,9 +8,10 @@ import { appRoutes } from './app.routes';
 import { LoginCallbackComponent } from './auth/login-callback.component';
 import { LogoutComponent } from './auth/logout.component';
 import { oktaAuth } from './auth/okta.config';
+import { NotFoundComponent } from './view/not-found/not-found.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginCallbackComponent, LogoutComponent],
+  declarations: [AppComponent, LoginCallbackComponent, LogoutComponent, NotFoundComponent],
   imports: [BrowserModule, RouterModule.forRoot(appRoutes), OktaAuthModule],
   providers: [{ provide: OKTA_CONFIG, useValue: { oktaAuth } }],
   bootstrap: [AppComponent],
