@@ -16,7 +16,11 @@ export class LoginCallbackComponent implements OnInit {
     private readonly router: Router,
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
+    void this.handleLoginCallback();
+  }
+
+  protected async handleLoginCallback(): Promise<void> {
     try {
       const { tokens, state } = await this.oktaAuth.token.parseFromUrl();
       console.info('[auth] token parse success', {

@@ -49,7 +49,7 @@ describe('LogoutComponent', () => {
     fixture = TestBed.createComponent(LogoutComponent);
     component = fixture.componentInstance;
 
-    await component.ngOnInit();
+    await (component as any).handleLogout();
 
     expect(oktaAuth.signOut).toHaveBeenCalledWith({
       postLogoutRedirectUri: `${environment.auth.postLogoutRedirectUri}?done=1`,
@@ -63,7 +63,7 @@ describe('LogoutComponent', () => {
     fixture = TestBed.createComponent(LogoutComponent);
     component = fixture.componentInstance;
 
-    await component.ngOnInit();
+    await (component as any).handleLogout();
 
     expect(component['signedOut']).toBeTrue();
     expect(oktaAuth.signOut).not.toHaveBeenCalled();
@@ -76,8 +76,22 @@ describe('LogoutComponent', () => {
     fixture = TestBed.createComponent(LogoutComponent);
     component = fixture.componentInstance;
 
-    await component.ngOnInit();
+    await (component as any).handleLogout();
 
     expect(router.navigate).toHaveBeenCalledWith(['/'], { replaceUrl: true });
+  });
+
+  it('ngOnInit triggers the async handler', async () => {
+    oktaAuth.signOut.and.resolveTo();
+    const route = setupTest({});
+    TestBed.overrideProvider(ActivatedRoute, { useValue: route });
+    fixture = TestBed.createComponent(LogoutComponent);
+    component = fixture.componentInstance;
+    const handler = spyOn<any>(component, 'handleLogout').and.callThrough();
+
+    component.ngOnInit();
+
+    await handler.calls.mostRecent().returnValue;
+    expect(oktaAuth.signOut).toHaveBeenCalled();
   });
 });

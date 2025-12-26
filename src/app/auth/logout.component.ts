@@ -20,7 +20,11 @@ export class LogoutComponent implements OnInit {
     private readonly router: Router,
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
+    void this.handleLogout();
+  }
+
+  protected async handleLogout(): Promise<void> {
     const done = this.route.snapshot.queryParamMap.has('done');
     if (done) {
       this.signedOut = true;

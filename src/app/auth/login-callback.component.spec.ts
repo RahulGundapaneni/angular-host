@@ -46,7 +46,7 @@ describe('LoginCallbackComponent', () => {
     });
     oktaAuth.tokenManager.setTokens.and.resolveTo();
 
-    await component.ngOnInit();
+    await (component as any).handleLoginCallback();
 
     expect(oktaAuth.tokenManager.setTokens).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(
@@ -65,7 +65,7 @@ describe('LoginCallbackComponent', () => {
     });
     oktaAuth.tokenManager.setTokens.and.resolveTo();
 
-    await component.ngOnInit();
+    await (component as any).handleLoginCallback();
 
     expect(router.navigate).toHaveBeenCalledWith(
       ['/'],
@@ -79,7 +79,7 @@ describe('LoginCallbackComponent', () => {
   it('redirects to logout on failure', async () => {
     oktaAuth.token.parseFromUrl.and.rejectWith(new Error('parse failure'));
 
-    await component.ngOnInit();
+    await (component as any).handleLoginCallback();
 
     expect(router.navigate).toHaveBeenCalledWith(['/logout'], { replaceUrl: true });
   });
@@ -91,7 +91,7 @@ describe('LoginCallbackComponent', () => {
     });
     oktaAuth.tokenManager.setTokens.and.resolveTo();
 
-    await component.ngOnInit();
+    await (component as any).handleLoginCallback();
 
     expect(router.navigate).toHaveBeenCalledWith(
       ['/'],
@@ -109,7 +109,7 @@ describe('LoginCallbackComponent', () => {
     });
     oktaAuth.tokenManager.setTokens.and.resolveTo();
 
-    await component.ngOnInit();
+    await (component as any).handleLoginCallback();
 
     expect(router.navigate).toHaveBeenCalledWith(
       ['/'],
@@ -118,5 +118,19 @@ describe('LoginCallbackComponent', () => {
         replaceUrl: true,
       },
     );
+  });
+
+  it('ngOnInit triggers the async handler', async () => {
+    oktaAuth.token.parseFromUrl.and.resolveTo({
+      tokens: { idToken: {}, accessToken: {} },
+      state: undefined,
+    });
+    oktaAuth.tokenManager.setTokens.and.resolveTo();
+    const handler = spyOn<any>(component, 'handleLoginCallback').and.callThrough();
+
+    component.ngOnInit();
+
+    await handler.calls.mostRecent().returnValue;
+    expect(oktaAuth.tokenManager.setTokens).toHaveBeenCalled();
   });
 });
