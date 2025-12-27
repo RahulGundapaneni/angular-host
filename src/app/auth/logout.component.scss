@@ -1,0 +1,26 @@
+.logout-error {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px;
+  font-family: Arial, sans-serif;
+  color: #1f2937;
+}
+
+.code {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.message {
+  color: #4b5563;
+}
+
+.link {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
